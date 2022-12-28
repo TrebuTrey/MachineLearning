@@ -1,5 +1,6 @@
 ##requirements.txt
 
+matplotlib
 torch 
 torchvision 
 torchaudio
