@@ -129,6 +129,7 @@ dmypy.json
 .pyre/
 
 PetImages/
+PetImages_2/
 vscode/
 MNIST/
 number_guess.png
