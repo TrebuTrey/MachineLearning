@@ -1,6 +1,9 @@
 ##requirements.txt
 
 matplotlib
+numpy
+opencv-python
 torch 
 torchvision 
 torchaudio
+tqdm
