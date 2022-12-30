@@ -4,7 +4,7 @@ Fundamental concepts of Machine Learning
 ## Repo Install Instructions
 
 1. Identify a location on the hard drive (i.e. ~/Documents).
-2. Clone the repository (creates a folder "ImageRec" at the location of the clone)
+2. Clone the repository (creates a folder "MachineLearning" at the location of the clone)
 ```bash
 git clone https://github.com/TrebuTrey/MachineLearning
 ```
