@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 REBUILD_DATA = False
 TESTING_DATA = True
-VAL_PCT = 0.1
+VAL_PCT = 0.1               # value percentage of the training_data actually becoming training data
 BATCH_SIZE = 100
 EPOCHS = 1
 
@@ -61,7 +61,7 @@ class Net(nn.Module):
         x = F.max_pool2d(F.relu(self.conv2(x)), (2,2))
         x = F.max_pool2d(F.relu(self.conv3(x)), (2,2))
 
-        print(x[0].shape)
+        # print(x[0].shape)
         if self._to_linear is None:
             self._to_linear = x[0].shape[0]*x[0].shape[1]*x[0].shape[2]
         return x
@@ -113,8 +113,6 @@ for epoch in range(EPOCHS):
         loss = loss_function(outputs, batch_y)
         loss.backward()
         optimizer.step()
-
-print(loss)
 
 correct = 0
 total = 0
