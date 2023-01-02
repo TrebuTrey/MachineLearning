@@ -135,3 +135,6 @@ MNIST/
 number_guess.png
 Pokemon_Images/
 input1_1.txt
+
+# pokemon folder
+pokemon/sprites*
