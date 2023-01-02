@@ -1,14 +1,16 @@
 import os
+import os.path
 import platform
 import sys
 import time
 
+import matplotlib.pyplot as plt
 import pyautogui as gui         #pyautogui is great for hotkeys and utilizing special characters on the system level, but it cannot register output in the applications
 import pydirectinput as inp     #pydirect input is perfect for controlling common button presses with the emulator development
-
+FILEPATH = os.path.join('D:', 'Emulator', 'RetroArch', 'retroarch.cfg') #make sure you use '/' and not '\' when designating your directory
+SCREENPATH = os.path.join('D:', 'Emulator', 'RetroArch', 'screenshots', 'Pokemon - Emerald Version (U)-230102-093708.PNG') #give access to your screenshots library for comparisons
+PLAY_GAME = False
 class Controller():
-    FILEPATH = os.path.join('D:', 'Emulator', 'RetroArch', 'retroarch.cfg') #make sure you use '/' and not '\' when designating your directory
-    FILEPATH
      
     KEYBIND = "input_player1_"
     aButton = 'a = '
@@ -69,7 +71,6 @@ class Controller():
             outfile.write("reset = " + resetButton)
             outfile.write("screenshot = " + screenshotButton)
     
-
 def mouseControl(): #establish where your X and Y position of the emulator will be on your screen so the mouse click in OpenEmulator will be set properly
     try:
         while True:
@@ -80,7 +81,6 @@ def mouseControl(): #establish where your X and Y position of the emulator will 
     except KeyboardInterrupt:
         print('\n')        
     
-
 def openEmulator():
     compOS = platform.system()
     
@@ -101,6 +101,10 @@ def reset(x):
 def moveIn(x):
     inp.typewrite(x)
 
+def takeScreenshot(x):
+    inp.typewrite(x)
+    
+
 cont = Controller()
 a = cont.aButton
 b = cont.bButton
@@ -113,17 +117,22 @@ r = cont.rightButton
 ff = cont.fastForward
 re = cont.resetButton
 sc = cont.screenshotButton
-openEmulator()
-inp.typewrite(ff)
-time.sleep(1)
-inp.typewrite(ff)
-for i in range(5):
-    for i in range(10):
-        moveIn(u)
+if PLAY_GAME:
+    openEmulator()
+    inp.typewrite(ff)
     time.sleep(1)
-    reset(re)
-    time.sleep(15)
+    inp.typewrite(ff)
+    for i in range(5):
+        for i in range(10):
+            moveIn(u)
+            takeScreenshot(sc)
+        time.sleep(1)
+        reset(re)
+        time.sleep(15)
 
-# inp.typewrite(a*100)
-# mouseControl()
+
+if os.path.isfile(SCREENPATH):
+    print("True")
+
+
 
