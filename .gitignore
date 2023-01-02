@@ -130,7 +130,7 @@ dmypy.json
 
 PetImages/
 PetImages_2/
-vscode/
+*vscode/
 MNIST/
 number_guess.png
 Pokemon_Images/
