@@ -4,6 +4,7 @@ matplotlib
 numpy>=1.19, <1.24
 opencv-python
 pyautogui
+pydirectinput
 torch 
 torchvision 
 torchaudio
