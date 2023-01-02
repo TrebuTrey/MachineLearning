@@ -4,11 +4,12 @@ import platform
 import sys
 import time
 
+import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import pyautogui as gui         #pyautogui is great for hotkeys and utilizing special characters on the system level, but it cannot register output in the applications
 import pydirectinput as inp     #pydirect input is perfect for controlling common button presses with the emulator development
 FILEPATH = os.path.join('D:', 'Emulator', 'RetroArch', 'retroarch.cfg') #make sure you use '/' and not '\' when designating your directory
-SCREENPATH = os.path.join('D:', 'Emulator', 'RetroArch', 'screenshots', 'Pokemon - Emerald Version (U)-230102-093708.PNG') #give access to your screenshots library for comparisons
+SCREENPATH = os.path.join('D:', 'Emulator', 'RetroArch', 'screenshots') #give access to your screenshots library for comparisons
 PLAY_GAME = False
 class Controller():
      
@@ -24,7 +25,7 @@ class Controller():
     fastForward = 'input_toggle_fast_forward = '
     resetButton = 'input_reset = '
     screenshotButton = 'input_screenshot = '
-    with open(FILEPATH, 'r') as infile, open('pokemon/input1_1.txt', 'w') as outfile: #outfile is visual confirmation that the right inputs were taken from the .cfg file
+    with open(FILEPATH, 'r') as infile, open('input1_1.txt', 'w') as outfile: #outfile is visual confirmation that the right inputs were taken from the .cfg file
             for line in infile:
                 if KEYBIND in line:
                     # outfile.write(line.replace(KEYBIND, ""))
@@ -130,9 +131,14 @@ if PLAY_GAME:
         reset(re)
         time.sleep(15)
 
+# currentImage = os.listdir(SCREENPATH)[len(os.listdir(SCREENPATH)) - 1]
+# previousImage = os.listdir(SCREENPATH)[len(os.listdir(SCREENPATH)) - 2]
 
-if os.path.isfile(SCREENPATH):
-    print("True")
+# pic = open(SCREENPATH + '\\' + currentImage, 'r')
+
+# img = mpimg.imread(pic)
+# imgplot = plt.imshow(img)
+# plt.show()
 
 
 
