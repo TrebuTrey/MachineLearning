@@ -1,9 +1,14 @@
+import logging
 import time
 
+import __init__
 from controller import EmulatorController, open_emulator
+from helpers.log import mod_fname
+logger = logging.getLogger(mod_fname(__file__))
 
 
 if __name__ == "__main__":
+    logger.info("running main")
     controller = EmulatorController()
     open_emulator()
     controller.fast_fwd()
