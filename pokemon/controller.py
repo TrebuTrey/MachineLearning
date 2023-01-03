@@ -1,8 +1,12 @@
 import logging
 import os
+import os.path
 import platform
 import time
 
+
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
 import pyautogui as gui           #pyautogui is great for hotkeys and utilizing special characters on the system level, but it cannot register output in the applications
 if platform.system() == "Windows":
     import pydirectinput as inp   #pydirect input is perfect for controlling common button presses with the emulator development
@@ -160,3 +164,22 @@ def control_mouse(): #establish where your X and Y position of the emulator will
             logger.info('\b' * len(positionStr), end='', flush=True)
     except KeyboardInterrupt:
         logger.info('\n')        
+    
+    
+def isStartMenu():  #make sure that screenshots folder is cleared before beginning a different ROM for parsing
+    cont.take_screenshot()
+    currentImage = os.listdir(RETROARCH_SCREENSHOTS_DIR)[len(os.listdir(RETROARCH_SCREENSHOTS_DIR)) - 1]
+    previousImage = os.listdir(RETROARCH_SCREENSHOTS_DIR)[len(os.listdir(RETROARCH_SCREENSHOTS_DIR)) - 2]
+
+    pic1 = RETROARCH_SCREENSHOTS_DIR + '\\' + currentImage
+    pic2 = RETROARCH_SCREENSHOTS_DIR + '\\' + previousImage
+
+    img1 = mpimg.imread(pic1)
+    img2 = mpimg.imread(pic2)
+    plt.imshow(img1)
+    plt.show()
+    
+cont = EmulatorController()
+isStartMenu()
+
+
