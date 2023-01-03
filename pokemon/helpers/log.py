@@ -1,6 +1,7 @@
 """A utility for standardizing logging capabilities."""
 
 import logging
+import os
 from typing import Union
 
 import coloredlogs
@@ -33,3 +34,7 @@ def get_logger(name: str, level: Union[int, str] = logging.INFO) \
     coloredlogs.install(level=level, logger=logger, fmt=DEFAULT_FMT, datefmt=DATE_FMT)
     return logger
     
+
+def mod_fname(fname: str) -> str:
+    """Modify the module file name."""
+    return os.path.basename(fname).replace(".py", "")
