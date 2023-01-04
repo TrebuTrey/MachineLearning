@@ -166,8 +166,8 @@ def control_mouse(): #establish where your X and Y position of the emulator will
         logger.info('\n')        
     
     
-def isStartMenu():  #make sure that screenshots folder is cleared before beginning a different ROM for parsing
-    cont.take_screenshot()
+def is_start_menu():  #make sure that screenshots folder is cleared before beginning a different ROM for parsing
+    EmulatorController.take_screenshot()
     currentImage = os.listdir(RETROARCH_SCREENSHOTS_DIR)[len(os.listdir(RETROARCH_SCREENSHOTS_DIR)) - 1]
     previousImage = os.listdir(RETROARCH_SCREENSHOTS_DIR)[len(os.listdir(RETROARCH_SCREENSHOTS_DIR)) - 2]
 
@@ -178,8 +178,7 @@ def isStartMenu():  #make sure that screenshots folder is cleared before beginni
     img2 = mpimg.imread(pic2)
     plt.imshow(img1)
     plt.show()
-    
-cont = EmulatorController()
-isStartMenu()
+
+
 
 
