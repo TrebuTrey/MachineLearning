@@ -45,8 +45,8 @@ def test_same_img(img_fn: str):
 
 if __name__ == "__main__":
     logger = get_logger(logger.name)
-    test_img_path_1 = "sprites/002_ivysaur.png"
-    test_img_path_2 = "sprites/003_venusaur.png"
+    test_img_path_1 = "images/sprites/002_ivysaur.png"
+    test_img_path_2 = "images/sprites/003_venusaur.png"
 
     logger.info(f"comparing img to itself: {test_img_path_1}")
     test_same_img(test_img_path_1)

@@ -5,7 +5,7 @@ import pandas as pd
 from helpers.log import get_logger, mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
-SPRITES_DIR = "sprites"
+SPRITES_DIR = "images/sprites"
 POKEMON_CSV_FN = "pokemon.csv"
 
 # making dataframe
