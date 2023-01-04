@@ -16,27 +16,37 @@ df = df.loc[df["CODE"] == 1]
 
 
 def get_pokemon_number(name: str) -> int:
-    pokemon = df.loc[df["NAME"].str.upper() == name]
+    """Retrieve a Pokémon's national number by its name."""
+    new_df = df.copy()
+    pokemon = new_df.loc[df["NAME"].str.upper() == name]
     number = pokemon.get("NUMBER").values[0]
     logger.debug(f"name: {name} | number: {number}")
     return number
 
 
-def get_pokemon_fn(number: int, name: str, ext: str = "png"):
+def create_pokemon_sprite_fn(number: int, name: str, ext: str = "png"):
+    """Generate the sprite filename from the Pokémon number and name."""
     base_fn = f"{number:03d}_{name.lower().replace(' ', '')}.{ext}"
     pokemon_fn = os.path.join(SPRITES_DIR, base_fn)
     logger.debug(f"pokemon_fn: {pokemon_fn}")
     return pokemon_fn
 
 
+def gen_2_dex() -> pd.DataFrame:
+    """Retrieve a dex of only Pokémon from generation II."""
+    gen_2_df = df.copy()
+    return gen_2_df.loc[df["NUMBER"] <= 251]
+
+
 def test_sprite_images_exist():
-    for index, row in df.iterrows():            
+    new_df = df.copy()
+    for index, row in new_df.iterrows():            
         pokemon_number = row.get("NUMBER")
         if pokemon_number > 251:
             logger.info("Test success!")
             break
         pokemon_name = row.get("NAME")
-        fn = get_pokemon_fn(pokemon_number, pokemon_name)
+        fn = create_pokemon_sprite_fn(pokemon_number, pokemon_name)
         if os.path.exists(fn):
             logger.info(f"{fn} exists")
         else:
