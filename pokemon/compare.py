@@ -1,10 +1,15 @@
 import logging
+import os
 
 import cv2
 import numpy as np
 
 from helpers.log import get_logger, mod_fname
 logger = logging.getLogger(mod_fname(__file__))
+
+from config import (
+ RETROARCH_SCREENSHOTS_DIR
+)
 
 IMG_SIZE = 80
 
@@ -45,8 +50,9 @@ def test_same_img(img_fn: str):
 
 if __name__ == "__main__":
     logger = get_logger(logger.name)
-    test_img_path_1 = "images/sprites/002_ivysaur.png"
-    test_img_path_2 = "images/sprites/003_venusaur.png"
+    emulator_test_img = os.listdir(RETROARCH_SCREENSHOTS_DIR)[len(os.listdir(RETROARCH_SCREENSHOTS_DIR)) - 1] #direct image from emulator
+    test_img_path_1 = os.path.join(RETROARCH_SCREENSHOTS_DIR , emulator_test_img)
+    test_img_path_2 = "sprites/shiny/130_gyarados.png"
 
     logger.info(f"comparing img to itself: {test_img_path_1}")
     test_same_img(test_img_path_1)
