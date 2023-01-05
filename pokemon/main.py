@@ -2,27 +2,28 @@ import logging
 import time
 
 import __init__
-from controller import EmulatorController, open_emulator
+from controller import delay
+from emulator import Emulator
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
 if __name__ == "__main__":
     logger.info("running main")
-    controller = EmulatorController()
-    open_emulator()
-    controller.fast_fwd()
-    time.sleep(1)
-    controller.fast_fwd()
-    time.sleep(3)
+    em = Emulator()
+    em.run_game()
+    em.fast_fwd_on()
+    delay(1)
+    em.fast_fwd_off()
+    delay(3)
     for i in range(5):
         for j in range(3):
-            controller.fast_fwd()
-            controller.press_a()
-            controller.fast_fwd()
-            time.sleep(0.2)
-        controller.move_down()
-        time.sleep(2)
-        controller.reset()
-        time.sleep(5)
+            em.fast_fwd_on()
+            em.cont.press_a()
+            em.fast_fwd_off()
+            delay(0.2)
+        em.cont.move_down()
+        delay(2)
+        em.reset()
+        delay(5)
     

@@ -1,27 +1,18 @@
 import logging
-import os
-import os.path
 import platform
 import time
 
-
-import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
-from PIL import Image
 import pyautogui as gui           #pyautogui is great for hotkeys and utilizing special characters on the system level, but it cannot register output in the applications
 if platform.system() == "Windows":
     import pydirectinput as inp   #pydirect input is perfect for controlling common button presses with the emulator development
 
-from config import (
-    EMULATOR_NAME, RETROARCH_APP_FP,
-    RETROARCH_DIR, RETROARCH_CFG_FP, RETROARCH_SCREENSHOTS_DIR
-)
+from config import RETROARCH_CFG_FP
 from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
 class EmulatorController():
-    COUNTER = 0
+    """Make controller actions inside an emulator."""
     def __init__(self, player_num: int = 1):
         self.player_num = player_num
         
@@ -101,62 +92,38 @@ class EmulatorController():
         self._press_btn_emulator(self.right_btn)
         logger.debug(f"moved right")
     
-    def fast_fwd(self):
+    def toggle_fast_fwd(self):
         self._press_btn_emulator(self.fast_fwd_btn)
-        # logger.debug(f"toggled fast forward")
-        self.toggle_count()
+        logger.debug(f"toggled fast forward")
 
-    def toggle_count(self):
-        self.COUNTER += 1
-        self.COUNTER = self.COUNTER % 2
-        if self.COUNTER == 0:
-            logger.debug(f"fast forward on")
-        else:
-            logger.debug(f"fast forward off")
-
-    def reset(self):
+    def press_reset_btn(self):
         self._press_btn_emulator(self.reset_btn)
         logger.debug(f"pressed reset button")
     
-    def take_screenshot(self):
+    def press_screenshot_btn(self):
         self._press_btn_emulator(self.screenshot_btn)
-        logger.debug(f"took screenshot")
+        logger.debug(f"pressed screenshot button")
     
     def _press_btn_emulator(self, btn: str):
         if platform.system() == "Darwin":
-            press_mac_key(btn)
+            _press_mac_key(btn)
         elif platform.system() == "Windows":
             inp.typewrite(btn)
 
-    def is_start_menu(self):  #make sure that screenshots folder is cleared before beginning a different ROM for parsing
-        self.take_screenshot()
-        currentImage = os.listdir(RETROARCH_SCREENSHOTS_DIR)[len(os.listdir(RETROARCH_SCREENSHOTS_DIR)) - 1]
-        previousImage = os.listdir(RETROARCH_SCREENSHOTS_DIR)[len(os.listdir(RETROARCH_SCREENSHOTS_DIR)) - 2]
 
-        pic1 = os.path.join(RETROARCH_SCREENSHOTS_DIR , currentImage)
-        pic2 = os.path.join(RETROARCH_SCREENSHOTS_DIR , previousImage)
-
-        img1 = mpimg.imread(pic1)
-        img2 = mpimg.imread(pic2)
-        plt.imshow(img1)
-        plt.show()
-
-        im = Image.open(pic1)
-        width, height = im.size
-
-        left = 4*width/7
-        top = 0
-        right = width
-        bottom = 3*height/7
-
-        im1 = im.crop((left, top, right, bottom))
-        im1.show()
-
-
-def press_mac_key(key: str):
-    gui.keyDown(key)
-    gui.keyUp(key)
-    logger.debug(f"pressed key: {key}")
+def nav_to_game():
+    logger.debug("navigating to game")
+    if platform.system() == "Darwin":
+        press_key("left")
+        delay(0.5)
+        press_key("down", presses=2)
+        delay(0.5)
+        press_key("right")
+        delay(0.5)
+        press_key("enter")
+    elif platform.system() == "Windows":
+        press_key("right", presses=3)
+        press_key("Enter")
 
 
 def delay(sec: int):
@@ -164,29 +131,22 @@ def delay(sec: int):
     time.sleep(sec)
 
 
-def open_emulator():
-    logger.info(f"opening {EMULATOR_NAME} emulator")
+def press_key(key: str, presses: int = 1):
     if platform.system() == "Darwin":
-        logger.debug(f"opening {RETROARCH_APP_FP}")
-        os.system(f"open {RETROARCH_APP_FP}")
-        delay(3)
-        press_mac_key('left')
-        delay(0.5)
-        press_mac_key('down')
-        press_mac_key('down')
-        delay(0.5)
-        press_mac_key('right')
-        delay(0.5)
-        press_mac_key('enter')
-        delay(0.5)
-        press_mac_key('enter')
+        _press_mac_key(key, presses)
     elif platform.system() == "Windows":
-        gui.hotkey("ctrl", "esc")
-        gui.write(EMULATOR_NAME)
-        gui.press("Enter")
-        delay(1)                   # make sure the system is opening up with proper time so the click can register in the focus window
-        inp.press("right" ,presses=3)
-        inp.press("Enter", presses=2)
+        _press_win_key(key, presses)
+
+
+def _press_win_key(key: str, presses: int = 1):
+    inp.press(key, presses=presses)
+
+
+def _press_mac_key(key: str, presses: int = 1):
+    for i in range(presses):
+        gui.keyDown(key)
+        gui.keyUp(key)
+        logger.debug(f"pressed key: {key}")
 
 
 def control_mouse(): #establish where your X and Y position of the emulator will be on your screen so the mouse click in OpenEmulator will be set properly
@@ -198,8 +158,3 @@ def control_mouse(): #establish where your X and Y position of the emulator will
             logger.info('\b' * len(positionStr), end='', flush=True)
     except KeyboardInterrupt:
         logger.info('\n')        
-    
-    
-if __name__ == "__main__":
-    cont = EmulatorController()
-    cont.is_start_menu()
