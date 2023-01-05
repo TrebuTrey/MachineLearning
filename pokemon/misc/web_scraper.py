@@ -12,7 +12,8 @@ sys.path.append(proj_root_path)
 from bs4 import BeautifulSoup
 import requests
 
-from dex import create_pokemon_sprite_fn, get_sprite_name, gen_2_dex
+from dex import gen_2_dex
+from image import create_pokemon_sprite_fn, get_sprite_name
 from helpers.log import get_logger, mod_fname
 logger = get_logger(mod_fname(__file__))
 
@@ -78,8 +79,8 @@ def find_sprite_urls(pokemon_name: str,
 
 def get_sprite(pokemon_name: str, generation: int, game: str, dirs: Tuple[str, str]):
     normal_dir, shiny_dir = dirs
-    normal_fp = create_pokemon_sprite_fn(pokemon_number, pokemon_name, normal_dir)
-    shiny_fp = create_pokemon_sprite_fn(pokemon_number, pokemon_name, shiny_dir)
+    normal_fp = create_pokemon_sprite_fn(pokemon_number, pokemon_name, game, normal_dir)
+    shiny_fp = create_pokemon_sprite_fn(pokemon_number, pokemon_name, game, shiny_dir)
 
     if os.path.exists(normal_fp) and os.path.exists(shiny_fp):
         logger.info(f"image path: {normal_fp}")

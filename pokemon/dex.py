@@ -2,6 +2,8 @@ import logging
 import os
 import pandas as pd
 
+from config import POKEMON_GAME
+from image import SpriteType, create_pokemon_sprite_fn
 from helpers.log import get_logger, mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
@@ -24,20 +26,6 @@ def get_pokemon_number(name: str) -> int:
     return number
 
 
-def get_sprite_name(name: str):
-    """Retrieve a Pokémon's sprite name."""
-    return name.lower().replace(' ','-').replace('.','').replace('\'','')
-
-
-def create_pokemon_sprite_fn(number: int, name: str,
-                             dir: str = SPRITES_DIR, ext: str = "png"):
-    """Generate the sprite filename from the Pokémon number and name."""
-    base_fn = f"{number:03d}_{get_sprite_name(name)}.{ext}"
-    pokemon_fn = os.path.join(dir, base_fn)
-    logger.debug(f"pokemon_fn: {pokemon_fn}")
-    return pokemon_fn
-
-
 def gen_2_dex() -> pd.DataFrame:
     """Retrieve a dex of only Pokémon from generation II."""
     gen_2_df = df.copy()
@@ -52,12 +40,19 @@ def test_sprite_images_exist():
             logger.info("Test success!")
             break
         pokemon_name = row.get("NAME")
-        fn = create_pokemon_sprite_fn(pokemon_number, pokemon_name)
-        if os.path.exists(fn):
-            logger.info(f"{fn} exists")
+        normal_fn = create_pokemon_sprite_fn(number=pokemon_number,
+                                             name=pokemon_name,
+                                             game=POKEMON_GAME,
+                                             type_=SpriteType.NORMAL)
+        shiny_fn = create_pokemon_sprite_fn(number=pokemon_number,
+                                            name=pokemon_name,
+                                            game=POKEMON_GAME,
+                                            type_=SpriteType.SHINY)
+        if os.path.exists(normal_fn) and os.path.exists(shiny_fn):
+            logger.info(f"{normal_fn} and {shiny_fn} exists")
         else:
             logger.error("Test failed")
-            raise FileNotFoundError(f"{fn} does not exist")
+            raise FileNotFoundError(f"either {normal_fn} or {shiny_fn} does not exist")
 
 
 if __name__ == "__main__":
