@@ -200,9 +200,6 @@ def control_mouse(): #establish where your X and Y position of the emulator will
         logger.info('\n')        
     
     
-cont = EmulatorController()
-cont.is_start_menu()
-
-
-
-
+if __name__ == "__main__":
+    cont = EmulatorController()
+    cont.is_start_menu()
