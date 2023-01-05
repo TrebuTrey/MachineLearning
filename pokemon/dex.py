@@ -24,10 +24,16 @@ def get_pokemon_number(name: str) -> int:
     return number
 
 
-def create_pokemon_sprite_fn(number: int, name: str, ext: str = "png"):
+def get_sprite_name(name: str):
+    """Retrieve a Pokémon's sprite name."""
+    return name.lower().replace(' ','-').replace('.','').replace('\'','')
+
+
+def create_pokemon_sprite_fn(number: int, name: str,
+                             dir: str = SPRITES_DIR, ext: str = "png"):
     """Generate the sprite filename from the Pokémon number and name."""
-    base_fn = f"{number:03d}_{name.lower().replace(' ', '')}.{ext}"
-    pokemon_fn = os.path.join(SPRITES_DIR, base_fn)
+    base_fn = f"{number:03d}_{get_sprite_name(name)}.{ext}"
+    pokemon_fn = os.path.join(dir, base_fn)
     logger.debug(f"pokemon_fn: {pokemon_fn}")
     return pokemon_fn
 
