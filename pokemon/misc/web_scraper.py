@@ -76,7 +76,8 @@ def find_sprite_urls(pokemon_name: str,
     }
 
 
-def get_sprite(pokemon_name: str, generation: int, game: str):
+def get_sprite(pokemon_name: str, generation: int, game: str, dirs: Tuple[str, str]):
+    normal_dir, shiny_dir = dirs
     normal_fp = create_pokemon_sprite_fn(pokemon_number, pokemon_name, normal_dir)
     shiny_fp = create_pokemon_sprite_fn(pokemon_number, pokemon_name, shiny_dir)
 
@@ -137,11 +138,11 @@ if __name__ == "__main__":
     logger.info(f"pokedex:\n{pokedex}")
 
     # create output dir if not already exists
-    normal_dir, shiny_dir = create_output_folders(game)
+    dirs = create_output_folders(game)
     
     # download sprite for each pokemon
     for index, row in pokedex.iterrows():            
         pokemon_number = row.get("NUMBER")
         pokemon_name = row.get("NAME")
-        get_sprite(pokemon_name, generation, game)
+        get_sprite(pokemon_name, generation, game, dirs)
         
