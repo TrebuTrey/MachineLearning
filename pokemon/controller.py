@@ -20,7 +20,7 @@ logger = logging.getLogger(mod_fname(__file__))
 
 
 class EmulatorController():
-
+    COUNTER = 0
     def __init__(self, player_num: int = 1):
         self.player_num = player_num
         
@@ -102,7 +102,16 @@ class EmulatorController():
     
     def fast_fwd(self):
         self._press_btn_emulator(self.fast_fwd_btn)
-        logger.debug(f"toggled fast forward")
+        # logger.debug(f"toggled fast forward")
+        self.toggle_count()
+
+    def toggle_count(self):
+        self.COUNTER += 1
+        self.COUNTER = self.COUNTER % 2
+        if self.COUNTER == 0:
+            logger.debug(f"fast forward on")
+        else:
+            logger.debug(f"fast forward off")
 
     def reset(self):
         self._press_btn_emulator(self.reset_btn)
