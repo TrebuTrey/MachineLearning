@@ -7,6 +7,7 @@ import time
 
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
+from PIL import Image
 import pyautogui as gui           #pyautogui is great for hotkeys and utilizing special characters on the system level, but it cannot register output in the applications
 if platform.system() == "Windows":
     import pydirectinput as inp   #pydirect input is perfect for controlling common button presses with the emulator development
@@ -127,6 +128,30 @@ class EmulatorController():
         elif platform.system() == "Windows":
             inp.typewrite(btn)
 
+    def is_start_menu(self):  #make sure that screenshots folder is cleared before beginning a different ROM for parsing
+        self.take_screenshot()
+        currentImage = os.listdir(RETROARCH_SCREENSHOTS_DIR)[len(os.listdir(RETROARCH_SCREENSHOTS_DIR)) - 1]
+        previousImage = os.listdir(RETROARCH_SCREENSHOTS_DIR)[len(os.listdir(RETROARCH_SCREENSHOTS_DIR)) - 2]
+
+        pic1 = os.path.join(RETROARCH_SCREENSHOTS_DIR , currentImage)
+        pic2 = os.path.join(RETROARCH_SCREENSHOTS_DIR , previousImage)
+
+        img1 = mpimg.imread(pic1)
+        img2 = mpimg.imread(pic2)
+        plt.imshow(img1)
+        plt.show()
+
+        im = Image.open(pic1)
+        width, height = im.size
+
+        left = 4*width/7
+        top = 0
+        right = width
+        bottom = 3*height/7
+
+        im1 = im.crop((left, top, right, bottom))
+        im1.show()
+
 
 def press_mac_key(key: str):
     gui.keyDown(key)
@@ -175,18 +200,8 @@ def control_mouse(): #establish where your X and Y position of the emulator will
         logger.info('\n')        
     
     
-def is_start_menu():  #make sure that screenshots folder is cleared before beginning a different ROM for parsing
-    EmulatorController.take_screenshot()
-    currentImage = os.listdir(RETROARCH_SCREENSHOTS_DIR)[len(os.listdir(RETROARCH_SCREENSHOTS_DIR)) - 1]
-    previousImage = os.listdir(RETROARCH_SCREENSHOTS_DIR)[len(os.listdir(RETROARCH_SCREENSHOTS_DIR)) - 2]
-
-    pic1 = RETROARCH_SCREENSHOTS_DIR + '\\' + currentImage
-    pic2 = RETROARCH_SCREENSHOTS_DIR + '\\' + previousImage
-
-    img1 = mpimg.imread(pic1)
-    img2 = mpimg.imread(pic2)
-    plt.imshow(img1)
-    plt.show()
+cont = EmulatorController()
+cont.is_start_menu()
 
 
 
