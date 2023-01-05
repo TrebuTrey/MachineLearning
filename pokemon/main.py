@@ -17,8 +17,12 @@ if __name__ == "__main__":
     time.sleep(3)
     for i in range(5):
         for j in range(3):
+            controller.fast_fwd()
             controller.press_a()
+            controller.fast_fwd()
             time.sleep(0.2)
+        controller.move_down()
         time.sleep(2)
         controller.reset()
+        time.sleep(5)
     
