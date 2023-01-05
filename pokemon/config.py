@@ -20,6 +20,10 @@ RETROARCH_DIR = config.get(SECTION, "RETROARCH_DIR")
 RETROARCH_CFG_FP = config.get(SECTION, "RETROARCH_CFG_FP")
 RETROARCH_SCREENSHOTS_DIR = config.get(SECTION, "RETROARCH_SCREENSHOTS_DIR")
 try:
+    POKEMON_GAME = config.get(SECTION, "POKEMON_GAME")
+except NoOptionError:
+    POKEMON_GAME = None  # no default
+try:
     LOG_LEVEL = config.get(SECTION, "LOG_LEVEL")
 except NoOptionError:
     LOG_LEVEL = "INFO"  # default to INFO logging level
@@ -28,4 +32,5 @@ logger.info(f"RETROARCH_DIR: {RETROARCH_DIR}")
 logger.info(f"RETROARCH_CFG_FP: {RETROARCH_CFG_FP}")
 logger.info(f"RETROARCH_SCREENSHOTS_DIR: {RETROARCH_SCREENSHOTS_DIR}")
 logger.info(f"RETROARCH_APP_FP: {RETROARCH_APP_FP}")
+logger.info(f"POKEMON_GAME: {POKEMON_GAME}")
 logger.info(f"LOG_LEVEL: {LOG_LEVEL}")
