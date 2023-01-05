@@ -13,14 +13,12 @@ if __name__ == "__main__":
     em = Emulator()
     em.run_game()
     em.fast_fwd_on()
-    delay(1)
-    em.fast_fwd_off()
     delay(3)
     for i in range(5):
         for j in range(3):
-            em.fast_fwd_on()
-            em.cont.press_a()
             em.fast_fwd_off()
+            em.cont.press_a()
+            em.fast_fwd_on()
             delay(0.2)
         em.cont.move_down()
         delay(2)
