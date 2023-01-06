@@ -3,6 +3,8 @@
 import cv2
 import numpy as np
 
+IMG_SIZE = 80
+
 
 class RGB():
     """Describes a pixel in terms of its RGB (red, green, blue) value."""
@@ -67,3 +69,34 @@ def get_img_color(img: cv2.Mat, ignore_white: bool = True) -> RGB:
     rgb_norm.g = tot_color.g/n_pixels
     rgb_norm.b = tot_color.b/n_pixels
     return rgb_norm
+
+
+def compare_img_pixels(img1: cv2.Mat, img2: cv2.Mat) -> float:
+    """Compares two images for pixel equality.
+    Result is a number between [min=0,max=unknown] where min -> same image and
+    increasing value indicates more differences between the images."""
+    # resize the images
+    img1 = cv2.resize(img1, (IMG_SIZE, IMG_SIZE))
+    img2 = cv2.resize(img2, (IMG_SIZE, IMG_SIZE))
+
+    diff = 0
+    for row1, row2 in zip(img1, img2):
+        for pixel1, pixel2 in zip(row1, row2):
+            # unpack into rgb values for each image
+            rgb1 = RGB(pixel1)
+            rgb2 = RGB(pixel2)
+            diff += get_color_diff(rgb1, rgb2)
+    return diff
+
+
+def test_diff_img(img1_fn: str, img2_fn: str):
+    img1 = cv2.imread(img1_fn)
+    img2 = cv2.imread(img2_fn)
+    img_diff = compare_img_pixels(img1, img2)
+    assert(img_diff != 0)
+
+
+def test_same_img(img_fn: str):
+    img = cv2.imread(img_fn)
+    img_diff = compare_img_pixels(img, img)
+    assert(img_diff == 0)
