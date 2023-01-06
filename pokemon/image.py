@@ -85,24 +85,29 @@ def get_latest_screenshot_fn() -> str:
         return None
     return files[-1]  # last element in list is most recent
 
-def cropped_pokemon() -> str:
-    file = get_latest_screenshot_fn()
-    im = Image.open(file)
-    width, height = im.size
 
-    left = 4*width/7
+def crop_pokemon(battle_img_fn: str) -> str:
+    """Crop square image of a Pokémon in battle."""
+    im = Image.open(battle_img_fn)
+
+    # percentages used in calcs were determined empirically
+    # valid only for generation II games
+    pokemon_width = im.width*(0.35)
+    pokemon_height = pokemon_width
+    left = im.width*(0.6)
+    right = left + pokemon_width
     top = 0
-    right = width
-    bottom = 2*height/5
+    bottom = pokemon_height
 
     im = im.crop((left, top, right, bottom))
-    # im.show()
-    im = im.save('crop.png')
-    im = 'crop.png'
-    return im
+    cropped_fn = "crop.png"
+    im.save(cropped_fn)
+    return cropped_fn
+
 
 def does_character_exist():
     trigger = False
+
 
 def test_img_color(name: str, game: str, img_fn: str, _type: SpriteType):
     sprite_type = determine_sprite_type(name, game, img_fn)
@@ -131,11 +136,14 @@ def test_sprite_images_exist():
 if __name__ == "__main__":
     logger = get_logger(logger.name)
 
+    # test 1
     logger.info(f"testing all sprite images exist")
     test_sprite_images_exist()
 
-    emulator_test_img_path = cropped_pokemon()
+    # test 2
     name = "gyarados"
     game = "crystal"
-    logger.info(f"testing {name} color: {emulator_test_img_path}")
-    test_img_color(name, game, emulator_test_img_path, SpriteType.SHINY)
+    emulator_battle_img_path = get_latest_screenshot_fn()
+    logger.info(f"testing {name} color: {emulator_battle_img_path}")
+    cropped_img_path = crop_pokemon(emulator_battle_img_path)
+    test_img_color(name, game, cropped_img_path, SpriteType.SHINY)
