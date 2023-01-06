@@ -23,6 +23,15 @@ class RGB():
         return self.r == 0 and self.g == 0 and self.b == 0
 
 
+def compare_img_color(img1: cv2.Mat, img2: cv2.Mat) -> float:
+    """Compares the color of two images.
+    Result is a number between [min=0,max=255*sqrt(3)] where min -> same color and
+    max -> opposite color (white vs black)."""
+    rgb1 = get_img_color(img1)
+    rgb2 = get_img_color(img2)
+    return get_color_diff(rgb1, rgb2)
+
+
 def get_n_pixels(img: cv2.Mat) -> int:
     """Obtain the total number of pixels in an image."""
     return int(img.size/RGB.LENGTH)

@@ -4,11 +4,11 @@ import logging
 import os
 from typing import List
 
-from PIL import Image
+import cv2
 
 from config import POKEMON_GAME, RETROARCH_SCREENSHOTS_DIR
 from dex import gen_2_dex, get_pokemon_number
-from helpers.rgb import compare_img_color
+from helpers.opencv_util import compare_img_color, get_image_height, get_image_width
 from helpers.log import get_logger, mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
@@ -28,9 +28,10 @@ def determine_sprite_type(name: str, game: str, img_fn: str) -> SpriteType:
     normal_fn = create_pokemon_sprite_fn(name, game, SpriteType.NORMAL)
     shiny_fn = create_pokemon_sprite_fn(name, game, SpriteType.SHINY)
     
-    normal_img = Image.open(normal_fn)
-    shiny_img = Image.open(shiny_fn)
-    img = Image.open(img_fn)
+    normal_img = cv2.imread(normal_fn)
+    shiny_img = cv2.imread(shiny_fn)
+    img = cv2.imread(img_fn)
+    img = cv2.resize(img, (get_image_width(normal_img), get_image_height(normal_img)))
 
     # use color differences to determine sprite type
     diff_normal = compare_img_color(img, normal_img)
