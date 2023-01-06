@@ -12,8 +12,9 @@ if __name__ == "__main__":
     logger.info("running main")
     em = Emulator()
     em.run_game()
-    em.fast_fwd_on()
+    em.fast_fwd_off()
     delay(3)
+    em.fast_fwd_on()
     for i in range(5):
         for j in range(3):
             em.fast_fwd_off()
