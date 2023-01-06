@@ -24,10 +24,19 @@ class RGB():
                 raise RuntimeError(f"Expected {self.LENGTH} or {self.LENGTH+1} values. Got {n_val}.")
         
     def is_white(self):
-        return self.r == 255 and self.g == 255 and self.b == 255
+        # allow for slightly off-white
+        return self.r >= 250 and self.g >= 250 and self.b >= 250
 
     def is_black(self):
         return self.r == 0 and self.g == 0 and self.b == 0
+    
+    def max(self):
+        return max(self.r, self.g, self.b)
+    
+    def offset(self, number: float):
+        self.r += number
+        self.g += number
+        self.b += number
 
 
 def compare_img_color(img1: Image, img2: Image) -> float:
@@ -36,6 +45,11 @@ def compare_img_color(img1: Image, img2: Image) -> float:
     max -> opposite color (white vs black)."""
     rgb1 = _get_img_color(img1)
     rgb2 = _get_img_color(img2)
+
+    # offset the values of rgb2 by difference in max from rgb1
+    amt_offset = rgb1.max() - rgb2.max()
+    rgb2.offset(amt_offset)
+
     return _get_color_diff(rgb1, rgb2)
 
 

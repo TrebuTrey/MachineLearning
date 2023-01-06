@@ -14,13 +14,23 @@ class RGB():
         self.g = 0
         self.b = 0
         if pixel is not None:
-            self.r, self.g, self.b = pixel
+            # OpenCV decoded images have the channels stored in **B G R** order
+            self.b, self.g, self.r = pixel
         
     def is_white(self):
-        return self.r == 255 and self.g == 255 and self.b == 255
+        # allow for slightly off-white
+        return self.r >= 250 and self.g >= 250 and self.b >= 250
 
     def is_black(self):
         return self.r == 0 and self.g == 0 and self.b == 0
+    
+    def max(self):
+        return max(self.r, self.g, self.b)
+    
+    def offset(self, number: float):
+        self.r += number
+        self.g += number
+        self.b += number
 
 
 def compare_img_color(img1: cv2.Mat, img2: cv2.Mat) -> float:
@@ -29,6 +39,11 @@ def compare_img_color(img1: cv2.Mat, img2: cv2.Mat) -> float:
     max -> opposite color (white vs black)."""
     rgb1 = get_img_color(img1)
     rgb2 = get_img_color(img2)
+    
+    # offset the values of rgb2 by difference in max from rgb1
+    amt_offset = rgb1.max() - rgb2.max()
+    rgb2.offset(amt_offset)
+    
     return get_color_diff(rgb1, rgb2)
 
 
