@@ -5,6 +5,7 @@ import os
 from typing import List
 
 import cv2
+from PIL import Image
 
 from config import POKEMON_GAME, RETROARCH_SCREENSHOTS_DIR
 from dex import gen_2_dex, get_pokemon_number
@@ -84,6 +85,22 @@ def get_latest_screenshot_fn() -> str:
         return None
     return files[-1]  # last element in list is most recent
 
+def crop_screenshot() -> str:
+    file = get_latest_screenshot_fn()
+    im = Image.open(file)
+    width, height = im.size
+
+    left = 4*width/7
+    top = 0
+    right = width
+    bottom = 2*height/5
+
+    im = im.crop((left, top, right, bottom))
+    im.show()
+    im = im.save('crop.png')
+    im = 'crop.png'
+    return im
+
 
 def test_img_color(name: str, game: str, img_fn: str, _type: SpriteType):
     sprite_type = determine_sprite_type(name, game, img_fn)
@@ -115,7 +132,7 @@ if __name__ == "__main__":
     logger.info(f"testing all sprite images exist")
     test_sprite_images_exist()
 
-    emulator_test_img_path = get_latest_screenshot_fn()
+    emulator_test_img_path = crop_screenshot()
     name = "gyarados"
     game = "crystal"
     logger.info(f"testing img color: {emulator_test_img_path}")
