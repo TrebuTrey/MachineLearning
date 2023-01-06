@@ -38,10 +38,10 @@ def determine_sprite_type(name: str, game: str, img_fn: str) -> SpriteType:
     diff_normal = compare_img_color(img, normal_img)
     diff_shiny = compare_img_color(img, shiny_img)
     if diff_normal < diff_shiny:
-        logger.info("image is more similar to normal")
+        logger.info(f"{name} is more similar to normal")
         return SpriteType.NORMAL
     else:
-        logger.info("image is more similar to shiny")
+        logger.info(f"{name} is more similar to shiny")
         return SpriteType.SHINY
 
 
@@ -85,7 +85,7 @@ def get_latest_screenshot_fn() -> str:
         return None
     return files[-1]  # last element in list is most recent
 
-def crop_screenshot() -> str:
+def cropped_pokemon() -> str:
     file = get_latest_screenshot_fn()
     im = Image.open(file)
     width, height = im.size
@@ -96,11 +96,13 @@ def crop_screenshot() -> str:
     bottom = 2*height/5
 
     im = im.crop((left, top, right, bottom))
-    im.show()
+    # im.show()
     im = im.save('crop.png')
     im = 'crop.png'
     return im
 
+def does_character_exist():
+    trigger = False
 
 def test_img_color(name: str, game: str, img_fn: str, _type: SpriteType):
     sprite_type = determine_sprite_type(name, game, img_fn)
@@ -132,8 +134,8 @@ if __name__ == "__main__":
     logger.info(f"testing all sprite images exist")
     test_sprite_images_exist()
 
-    emulator_test_img_path = crop_screenshot()
+    emulator_test_img_path = cropped_pokemon()
     name = "gyarados"
     game = "crystal"
-    logger.info(f"testing img color: {emulator_test_img_path}")
+    logger.info(f"testing {name} color: {emulator_test_img_path}")
     test_img_color(name, game, emulator_test_img_path, SpriteType.SHINY)
