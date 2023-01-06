@@ -13,7 +13,7 @@ from helpers.log import get_logger, mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
-SPRITES_DIR = "images/sprites"
+SPRITES_DIR = os.path.join("images", "sprites")
 
 
 class SpriteType(str, Enum):
@@ -115,10 +115,7 @@ if __name__ == "__main__":
     test_sprite_images_exist()
 
     emulator_test_img_path = get_latest_screenshot_fn()
-    normal_img_path = "images/sprites/crystal/normal/130_gyarados.png"
-    shiny_img_path = "images/sprites/crystal/shiny/130_gyarados.png"
-
     name = "gyarados"
     game = "crystal"
-    logger.info(f"testing img color: {normal_img_path}")
+    logger.info(f"testing img color: {emulator_test_img_path}")
     test_img_color(name, game, emulator_test_img_path, SpriteType.SHINY)
