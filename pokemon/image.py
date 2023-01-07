@@ -128,6 +128,43 @@ def crop_name_in_battle(battle_img_fn: str) -> str:
         im1.save(cropped_fn)
     return cropped_fn
 
+def get_name(battle_img_fn: str) -> str:
+    """Crop name of a Pokémon in battle."""
+    name = ""
+    pix = []
+    im = Image.open(battle_img_fn)
+
+    # percentages used in calcs were determined empirically
+    # valid only for generation II games
+    for i in range(1, 3):
+        name_width = im.width*(0.0495)
+        name_height = im.height*(0.05)
+        left = i*name_width
+        right = left + name_width
+        top = 0
+        bottom = name_height
+
+        im1 = im.crop((left, top, right, bottom))
+        cropped_fn = "char_" + str(i) + ".png"
+        im1.save(cropped_fn)
+        for x in range(0, im1.width):
+            for y in range(0, im1.height):
+                coordinate = x, y
+                pix = im1.getpixel(coordinate)
+                avg = round(pix[0]+pix[1]+pix[2]/3)
+                # print(avg)
+                if avg >= 300:
+                    pix = (255, 255, 255)
+                else:
+                    pix = (0, 0, 0)
+                print(pix)
+                im1.putpixel(coordinate, pix)
+        im1.save(cropped_fn)
+                
+        
+    
+    return name
+
 
 def test_img_color(name: str, game: str, img_fn: str, _type: SpriteType):
     sprite_type = determine_sprite_type(name, game, img_fn)
@@ -142,6 +179,7 @@ if __name__ == "__main__":
     name = "gyarados"
     game = "crystal"
     emulator_battle_img_path = get_latest_screenshot_fn()
+    get_name(emulator_battle_img_path)
     logger.info(f"testing {name} color: {emulator_battle_img_path}")
     cropped_img_path = crop_pokemon_in_battle(emulator_battle_img_path)
     name_path = crop_name_in_battle(emulator_battle_img_path)
