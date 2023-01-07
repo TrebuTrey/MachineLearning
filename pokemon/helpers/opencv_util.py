@@ -111,16 +111,3 @@ def compare_img_pixels(img1: cv2.Mat, img2: cv2.Mat) -> float:
             rgb2 = RGB(pixel2)
             diff += get_color_diff(rgb1, rgb2)
     return diff
-
-
-def test_diff_img(img1_fn: str, img2_fn: str):
-    img1 = cv2.imread(img1_fn)
-    img2 = cv2.imread(img2_fn)
-    img_diff = compare_img_pixels(img1, img2)
-    assert(img_diff != 0)
-
-
-def test_same_img(img_fn: str):
-    img = cv2.imread(img_fn)
-    img_diff = compare_img_pixels(img, img)
-    assert(img_diff == 0)
