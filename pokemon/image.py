@@ -172,26 +172,3 @@ def get_name(battle_img_fn: str) -> str:
         
     
     return name
-
-
-def test_img_color(name: str, game: str, img_fn: str, _type: SpriteType):
-    img = cv2.imread(img_fn)
-    sprite_type = determine_sprite_type(name, game, img)
-    assert(sprite_type == _type)
-    logger.info("Test success!")
-
-
-if __name__ == "__main__":
-    logger = get_logger(logger.name)
-
-    # test 2
-    name = "gyarados"
-    game = "crystal"
-    emulator_battle_img_path = get_latest_screenshot_fn()
-    get_name(emulator_battle_img_path)
-    logger.info(f"testing {name} color: {emulator_battle_img_path}")
-    cropped_letters = crop_name_in_battle(emulator_battle_img_path)
-
-    cropped_img_path = crop_pokemon_in_battle(emulator_battle_img_path)
-    name_path = crop_name_in_battle(emulator_battle_img_path)
-    test_img_color(name, game, cropped_img_path, SpriteType.SHINY)
