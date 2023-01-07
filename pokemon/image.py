@@ -104,19 +104,24 @@ def crop_pokemon_in_battle(battle_img_fn: str) -> str:
     im.save(cropped_fn)
     return cropped_fn
 
-def get_name(battle_img_fn: str) -> str:
+
+def crop_name_in_battle(battle_img_fn: str) -> str:
     """Crop name of a Pokémon in battle."""
     im = Image.open(battle_img_fn)
 
-    # percentages used in calcs were determined empirically
-    # valid only for generation II games
-    for i in range(10):
-        name_width = im.width*(0.0495)
-        name_height = im.height*(0.05)
-        left = i*name_width
-        right = left + name_width
+    # generation II games have maximum 10 letters for names
+    max_letters = 10
+    for i in range(max_letters):
+        # percentages used in calcs were determined empirically
+        # valid only for generation II games
+        letter_width = im.width*(0.04375)
+        letter_height = letter_width
+        letter_space = letter_width/7
+        
+        left = i*(letter_width + letter_space) + im.width*(0.05)
+        right = left + letter_width
         top = 0
-        bottom = name_height
+        bottom = letter_height
 
         im1 = im.crop((left, top, right, bottom))
         cropped_fn = "name_" + str(i) + ".png"
@@ -143,5 +148,5 @@ if __name__ == "__main__":
     emulator_battle_img_path = get_latest_screenshot_fn()
     logger.info(f"testing {name} color: {emulator_battle_img_path}")
     cropped_img_path = crop_pokemon_in_battle(emulator_battle_img_path)
-    name_path = get_name(emulator_battle_img_path)
+    name_path = crop_name_in_battle(emulator_battle_img_path)
     test_img_color(name, game, cropped_img_path, SpriteType.SHINY)
