@@ -10,6 +10,7 @@ from image import (
     SPRITES_DIR,
     SpriteType,
     create_pokemon_sprite_fn,
+    crop_name_in_battle,
     crop_pokemon_in_battle,
     determine_sprite_type,
     get_sprite_name,
@@ -85,6 +86,17 @@ def test_5_determine_sprite_type():
         sprite_type = determine_sprite_type(name="Gyarados", game=POKEMON_GAME, img=input_img)
         assert(sprite_type == SpriteType.SHINY)
     logger.info("Test 5 - success!")
+
+
+def test_6_crop_name_in_battle():
+    logger.info("Test 6 - crop_name_in_battle")
+    for i in range(3):
+        n = i + 1
+        input_img_fn = os.path.join(TEST_IMG_DIR, f"battle_img_{n}.png")
+        letter_imgs = crop_name_in_battle(input_img_fn, del_png=False)
+        pokemon_name = "Gyarados"
+        assert(len(letter_imgs) == len(pokemon_name))
+    logger.info("Test 6 - success!")
 
 
 @click.command()

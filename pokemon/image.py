@@ -9,7 +9,9 @@ from PIL import Image
 
 from config import RETROARCH_SCREENSHOTS_DIR
 from dex import get_pokemon_number
-from helpers.opencv_util import compare_img_color, get_image_height, get_image_width
+from helpers.opencv_util import (
+    compare_img_color, get_image_height, get_image_width, is_img_white
+)
 from helpers.log import get_logger, mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
@@ -112,28 +114,42 @@ def crop_pokemon_in_battle(battle_img_fn: str, del_png: bool = True) -> cv2.Mat:
     return img
 
 
-def crop_name_in_battle(battle_img_fn: str) -> str:
+def crop_name_in_battle(battle_img_fn: str, del_png: bool = True) -> List[cv2.Mat]:
     """Crop name of a Pokémon in battle."""
     im = Image.open(battle_img_fn)
 
-    # generation II games have maximum 10 letters for names
-    max_letters = 10
-    for i in range(max_letters):
+    # generation II games have maximum 10 chars for names
+    max_chars = 10
+    letter_imgs = list()
+    for i in range(max_chars):
         # percentages used in calcs were determined empirically
         # valid only for generation II games
-        letter_width = im.width*(0.04375)
-        letter_height = letter_width
-        letter_space = letter_width/7
+        char_width = im.width*(0.04375)
+        char_height = char_width
+        char_space = char_width/7
         
-        left = i*(letter_width + letter_space) + im.width*(0.05)
-        right = left + letter_width
+        left = i*(char_width + char_space) + im.width*(0.05)
+        right = left + char_width
         top = 0
-        bottom = letter_height
+        bottom = char_height
 
-        im1 = im.crop((left, top, right, bottom))
-        cropped_fn = "name_" + str(i) + ".png"
-        im1.save(cropped_fn)
-    return cropped_fn
+        # crop image and save to disk
+        im_char = im.crop((left, top, right, bottom))
+        cropped_fn = f"char_{str(i)}.png"
+        im_char.save(cropped_fn)
+
+        # load into OpenCV obj
+        img = cv2.imread(cropped_fn)
+
+        # determine if img contains a letter based on how white it is
+        if not is_img_white(img):
+            logger.debug("image contains a letter")
+            letter_imgs.append(img)
+
+        if del_png:
+            os.remove(cropped_fn)
+
+    return letter_imgs
 
 
 def get_name(battle_img_fn: str) -> str:
