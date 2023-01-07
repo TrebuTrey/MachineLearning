@@ -18,7 +18,7 @@ def get_name(battle_img_fn: str, i:int):
             pix = im1.getpixel(coordinate)
             avg = round((pix[0]+pix[1]+pix[2])/3)
             # print(avg)
-            if avg >= 300:
+            if avg >= 127:
                 pix = (255, 255, 255)
             else:
                 pix = (0, 0, 0)
