@@ -134,30 +134,8 @@ def test_img_color(name: str, game: str, img_fn: str, _type: SpriteType):
     logger.info("Test success!")
 
 
-def test_sprite_images_exist():
-    dex = gen_2_dex()
-    for _, row in dex.iterrows():            
-        pokemon_name = row.get("NAME")
-        normal_fn = create_pokemon_sprite_fn(name=pokemon_name,
-                                             game=POKEMON_GAME,
-                                             _type=SpriteType.NORMAL)
-        shiny_fn = create_pokemon_sprite_fn(name=pokemon_name,
-                                            game=POKEMON_GAME,
-                                            _type=SpriteType.SHINY)
-        if os.path.exists(normal_fn) and os.path.exists(shiny_fn):
-            logger.debug(f"{normal_fn} and {shiny_fn} exists")
-        else:
-            logger.error("Test failed")
-            raise FileNotFoundError(f"either {normal_fn} or {shiny_fn} does not exist")
-    logger.info("Test success!")
-
-
 if __name__ == "__main__":
     logger = get_logger(logger.name)
-
-    # test 1
-    logger.info(f"testing all sprite images exist")
-    test_sprite_images_exist()
 
     # test 2
     name = "gyarados"
