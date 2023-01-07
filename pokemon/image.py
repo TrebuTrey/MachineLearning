@@ -86,7 +86,7 @@ def get_latest_screenshot_fn() -> str:
     return files[-1]  # last element in list is most recent
 
 
-def crop_pokemon(battle_img_fn: str) -> str:
+def crop_pokemon_in_battle(battle_img_fn: str) -> str:
     """Crop square image of a Pokémon in battle."""
     im = Image.open(battle_img_fn)
 
@@ -142,6 +142,6 @@ if __name__ == "__main__":
     game = "crystal"
     emulator_battle_img_path = get_latest_screenshot_fn()
     logger.info(f"testing {name} color: {emulator_battle_img_path}")
-    cropped_img_path = crop_pokemon(emulator_battle_img_path)
+    cropped_img_path = crop_pokemon_in_battle(emulator_battle_img_path)
     name_path = get_name(emulator_battle_img_path)
     test_img_color(name, game, cropped_img_path, SpriteType.SHINY)
