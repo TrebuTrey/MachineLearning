@@ -141,8 +141,4 @@ input1_1.txt
 
 # pokemon folder
 pokemon/config.ini
-pokemon/*/sprites*/
-pokemon/crop.png
-pokemon/tests/test_files/test_images/
-pokemon/images/rebuild_letter.py
-pokemon/images/letters
+pokemon/**/*.png
