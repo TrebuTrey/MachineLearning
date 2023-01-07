@@ -74,10 +74,22 @@ def test_4_crop_pokemon_in_battle():
     logger.info("Test 4 - success!")
 
 
+def test_5_determine_sprite_type():
+    logger.info("Test 5 - determine_sprite_type")
+    for i in range(3):
+        n = i + 1
+        input_img_fn = os.path.join(TEST_IMG_DIR, f"cropped_poke_battle_img_{n}.png")
+        input_img = cv2.imread(input_img_fn)
+        sprite_type = determine_sprite_type(name="Gyarados", game=POKEMON_GAME, img=input_img)
+        assert(sprite_type == SpriteType.SHINY)
+    logger.info("Test 5 - success!")
+
+
 if __name__ == "__main__":
     logger.info(f"Testing {MODULE}")
     test_1_get_sprite_name()
     test_2_create_pokemon_sprite_fn()
     test_3_verify_sprite_images_exist()
     test_4_crop_pokemon_in_battle()
+    test_5_determine_sprite_type()
     logger.info("All tests pass!")

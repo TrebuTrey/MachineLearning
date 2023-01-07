@@ -37,11 +37,11 @@ def determine_sprite_type(name: str, game: str, img: cv2.Mat) -> SpriteType:
     diff_normal = compare_img_color(img, normal_img)
     diff_shiny = compare_img_color(img, shiny_img)
     if diff_normal < diff_shiny:
-        logger.info(f"{name} is more similar to normal")
-        return SpriteType.NORMAL
+        sprite_type = SpriteType.NORMAL
     else:
-        logger.info(f"{name} is more similar to shiny")
-        return SpriteType.SHINY
+        sprite_type = SpriteType.SHINY
+    logger.debug(f"{name} is more similar to {sprite_type}")
+    return sprite_type
 
 
 def create_pokemon_sprite_fn(name: str,
