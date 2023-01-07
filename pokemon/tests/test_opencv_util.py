@@ -1,3 +1,4 @@
+import math
 import os
 
 import cv2
@@ -32,8 +33,20 @@ def test_2_verify_diff_img():
     logger.info("Test 2 - success!")
 
 
+def test_3_compare_img_color():
+    logger.info("Test 3 - compare_img_color")
+    img1_fn = os.path.join(TEST_IMG_DIR, "black.png")
+    img2_fn = os.path.join(TEST_IMG_DIR, "white.png")
+    img1 = cv2.imread(img1_fn)
+    img2 = cv2.imread(img2_fn)
+    img_diff = compare_img_color(img1, img2, ignore_white=False, offset_shading=False)
+    assert(math.isclose(img_diff, 255*math.sqrt(3), rel_tol=1e-06))
+    logger.info("Test 3 - success!")
+
+
 if __name__ == "__main__":
     logger.info(f"Testing {MODULE}")
     test_1_verify_same_img()
     test_2_verify_diff_img()
+    test_3_compare_img_color()
     logger.info("All tests pass!")
