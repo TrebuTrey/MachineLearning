@@ -39,16 +39,20 @@ class RGB():
         self.b += number
 
 
-def compare_img_color(img1: Image, img2: Image) -> float:
+def compare_img_color(img1: Image,
+                      img2: Image,
+                      ignore_white: bool = True,
+                      offset_shading: bool = True) -> float:
     """Compares the color of two images.
     Result is a number between [min=0,max=255*sqrt(3)] where min -> same color and
     max -> opposite color (white vs black)."""
-    rgb1 = _get_img_color(img1)
-    rgb2 = _get_img_color(img2)
+    rgb1 = _get_img_color(img1, ignore_white)
+    rgb2 = _get_img_color(img2, ignore_white)
 
-    # offset the values of rgb2 by difference in max from rgb1
-    amt_offset = rgb1.max() - rgb2.max()
-    rgb2.offset(amt_offset)
+    if offset_shading:
+        # offset the values of rgb2 by difference in max from rgb1
+        amt_offset = rgb1.max() - rgb2.max()
+        rgb2.offset(amt_offset)
 
     return _get_color_diff(rgb1, rgb2)
 
