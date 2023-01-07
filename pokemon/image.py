@@ -7,8 +7,8 @@ from typing import List
 import cv2
 from PIL import Image
 
-from config import POKEMON_GAME, RETROARCH_SCREENSHOTS_DIR
-from dex import gen_2_dex, get_pokemon_number
+from config import RETROARCH_SCREENSHOTS_DIR
+from dex import get_pokemon_number
 from helpers.opencv_util import compare_img_color, get_image_height, get_image_width
 from helpers.log import get_logger, mod_fname
 logger = logging.getLogger(mod_fname(__file__))
@@ -127,10 +127,6 @@ def crop_name_in_battle(battle_img_fn: str) -> str:
         cropped_fn = "name_" + str(i) + ".png"
         im1.save(cropped_fn)
     return cropped_fn
-
-
-def does_character_exist():
-    trigger = False
 
 
 def test_img_color(name: str, game: str, img_fn: str, _type: SpriteType):
