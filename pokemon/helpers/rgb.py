@@ -25,7 +25,7 @@ class RGB():
         
     def is_white(self):
         # allow for slightly off-white
-        return self.r >= 250 and self.g >= 250 and self.b >= 250
+        return self.r >= 245 and self.g >= 245 and self.b >= 245
 
     def is_black(self):
         return self.r == 0 and self.g == 0 and self.b == 0
@@ -55,6 +55,12 @@ def compare_img_color(img1: Image,
         rgb2.offset(amt_offset)
 
     return _get_color_diff(rgb1, rgb2)
+
+
+def is_img_white(img: Image) -> bool:
+    """Determine if an image is all white."""
+    img_color = _get_img_color(img, ignore_white=False)
+    return img_color.is_white()
 
 
 def _get_n_pixels(img: Image) -> int:
