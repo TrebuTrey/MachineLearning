@@ -23,7 +23,7 @@ class SpriteType(str, Enum):
     SHINY = "shiny"
 
 
-def determine_sprite_type(name: str, game: str, img_fn: str) -> SpriteType:
+def determine_sprite_type(name: str, game: str, img: cv2.Mat) -> SpriteType:
     """Determine the sprite type based on image color comparison."""
     # retrieve db image filenames
     normal_fn = create_pokemon_sprite_fn(name, game, SpriteType.NORMAL)
@@ -31,7 +31,6 @@ def determine_sprite_type(name: str, game: str, img_fn: str) -> SpriteType:
     
     normal_img = cv2.imread(normal_fn)
     shiny_img = cv2.imread(shiny_fn)
-    img = cv2.imread(img_fn)
     img = cv2.resize(img, (get_image_width(normal_img), get_image_height(normal_img)))
 
     # use color differences to determine sprite type
@@ -86,7 +85,7 @@ def get_latest_screenshot_fn() -> str:
     return files[-1]  # last element in list is most recent
 
 
-def crop_pokemon_in_battle(battle_img_fn: str) -> str:
+def crop_pokemon_in_battle(battle_img_fn: str, del_png: bool = True) -> cv2.Mat:
     """Crop square image of a Pokémon in battle."""
     im = Image.open(battle_img_fn)
 
@@ -99,10 +98,18 @@ def crop_pokemon_in_battle(battle_img_fn: str) -> str:
     top = 0
     bottom = pokemon_height
 
+    # crop image and save to disk
     im = im.crop((left, top, right, bottom))
     cropped_fn = "crop.png"
     im.save(cropped_fn)
-    return cropped_fn
+
+    # load into OpenCV obj
+    img = cv2.imread(cropped_fn)
+    
+    if del_png:
+        os.remove(cropped_fn)
+
+    return img
 
 
 def crop_name_in_battle(battle_img_fn: str) -> str:
@@ -127,6 +134,7 @@ def crop_name_in_battle(battle_img_fn: str) -> str:
         cropped_fn = "name_" + str(i) + ".png"
         im1.save(cropped_fn)
     return cropped_fn
+
 
 def get_name(battle_img_fn: str) -> str:
     """Crop name of a Pokémon in battle."""
@@ -167,7 +175,8 @@ def get_name(battle_img_fn: str) -> str:
 
 
 def test_img_color(name: str, game: str, img_fn: str, _type: SpriteType):
-    sprite_type = determine_sprite_type(name, game, img_fn)
+    img = cv2.imread(img_fn)
+    sprite_type = determine_sprite_type(name, game, img)
     assert(sprite_type == _type)
     logger.info("Test success!")
 
@@ -181,6 +190,8 @@ if __name__ == "__main__":
     emulator_battle_img_path = get_latest_screenshot_fn()
     get_name(emulator_battle_img_path)
     logger.info(f"testing {name} color: {emulator_battle_img_path}")
+    cropped_letters = crop_name_in_battle(emulator_battle_img_path)
+
     cropped_img_path = crop_pokemon_in_battle(emulator_battle_img_path)
     name_path = crop_name_in_battle(emulator_battle_img_path)
     test_img_color(name, game, cropped_img_path, SpriteType.SHINY)

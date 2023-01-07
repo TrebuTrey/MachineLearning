@@ -99,13 +99,13 @@ def get_img_color(img: cv2.Mat, ignore_white: bool = True) -> RGB:
     return rgb_norm
 
 
-def compare_img_pixels(img1: cv2.Mat, img2: cv2.Mat) -> float:
+def compare_img_pixels(img1: cv2.Mat, img2: cv2.Mat, img_resize: int = IMG_SIZE) -> float:
     """Compares two images for pixel equality.
     Result is a number between [min=0,max=unknown] where min -> same image and
     increasing value indicates more differences between the images."""
     # resize the images
-    img1 = cv2.resize(img1, (IMG_SIZE, IMG_SIZE))
-    img2 = cv2.resize(img2, (IMG_SIZE, IMG_SIZE))
+    img1 = cv2.resize(img1, (img_resize, img_resize))
+    img2 = cv2.resize(img2, (img_resize, img_resize))
 
     diff = 0
     for row1, row2 in zip(img1, img2):
