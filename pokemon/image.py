@@ -56,7 +56,7 @@ def create_pokemon_sprite_fn(name: str,
     if _type is None:
         pokemon_fn = os.path.join(_dir, base_fn)
     else:
-        pokemon_fn = os.path.join(_dir, game, _type, base_fn)
+        pokemon_fn = os.path.join(_dir, game.lower(), _type, base_fn)
     logger.debug(f"pokemon_fn: {pokemon_fn}")
     return pokemon_fn
 
