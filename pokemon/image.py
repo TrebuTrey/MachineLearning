@@ -9,13 +9,16 @@ from PIL import Image
 
 from config import RETROARCH_SCREENSHOTS_DIR
 from dex import get_pokemon_number
-from helpers.opencv_util import (
-    compare_img_color, get_image_height, get_image_width, is_img_white
+from helpers.opencv_util import ( 
+    IMG_SIZE_VERY_SMALL,
+    compare_img_color, compare_img_pixels,
+    get_img_height, get_img_width, is_img_white
 )
-from helpers.log import get_logger, mod_fname
+from helpers.log import mod_fname
 logger = logging.getLogger(mod_fname(__file__))
 
 
+LETTERS_DIR = os.path.join("images", "letters")
 SPRITES_DIR = os.path.join("images", "sprites")
 
 
@@ -33,7 +36,7 @@ def determine_sprite_type(name: str, game: str, img: cv2.Mat) -> SpriteType:
     
     normal_img = cv2.imread(normal_fn)
     shiny_img = cv2.imread(shiny_fn)
-    img = cv2.resize(img, (get_image_width(normal_img), get_image_height(normal_img)))
+    img = cv2.resize(img, (get_img_width(normal_img), get_img_height(normal_img)))
 
     # use color differences to determine sprite type
     diff_normal = compare_img_color(img, normal_img)
@@ -44,6 +47,36 @@ def determine_sprite_type(name: str, game: str, img: cv2.Mat) -> SpriteType:
         sprite_type = SpriteType.SHINY
     logger.debug(f"{name} is more similar to {sprite_type}")
     return sprite_type
+
+
+def determine_name(letter_imgs: List[cv2.Mat]) -> str:
+    """Determine the Pokémon name based on images of each letter."""
+    name = str()
+    for letter_img in letter_imgs:
+        letter = determine_letter(letter_img)
+        name += letter
+    return name
+
+
+def determine_letter(letter_img: cv2.Mat) -> str:
+    """Determine the letter described in the image based on
+    pixel comparison using an image database of the alphabet."""
+    # grab PNG files from alphabet image db
+    glob_pattern = os.path.join(LETTERS_DIR, "*.png")
+    files = list(filter(os.path.isfile, glob.glob(glob_pattern)))
+    
+    # compare image to each letter in the alphabet
+    min_diff = None
+    letter = str()
+    for file in files:
+        alpha_img = cv2.imread(file)
+        diff = compare_img_pixels(letter_img,
+                                  alpha_img,
+                                  img_resize=IMG_SIZE_VERY_SMALL)
+        if min_diff is None or diff < min_diff:
+            min_diff = diff
+            letter = os.path.basename(file).replace(".png", "")
+    return letter
 
 
 def create_pokemon_sprite_fn(name: str,

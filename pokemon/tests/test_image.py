@@ -12,6 +12,7 @@ from image import (
     create_pokemon_sprite_fn,
     crop_name_in_battle,
     crop_pokemon_in_battle,
+    determine_name,
     determine_sprite_type,
     get_sprite_name,
 )
@@ -97,6 +98,19 @@ def test_6_crop_name_in_battle():
         pokemon_name = "Gyarados"
         assert(len(letter_imgs) == len(pokemon_name))
     logger.info("Test 6 - success!")
+
+
+def test_7_determine_name():
+    logger.info("Test 7 - determine_name")
+    pokemon_name = "Gyarados"
+    letter_imgs = list()
+    for i,char in enumerate(pokemon_name):
+        input_img_fn = os.path.join(TEST_IMG_DIR, f"char_{i}.png")
+        input_img = cv2.imread(input_img_fn)
+        letter_imgs.append(input_img)
+    name = determine_name(letter_imgs)
+    assert(name.lower() == pokemon_name.lower())
+    logger.info("Test 7 - success!")
 
 
 @click.command()

@@ -3,7 +3,11 @@
 import cv2
 import numpy as np
 
-IMG_SIZE = 80
+IMG_SIZE_VERY_SMALL = 8
+IMG_SIZE_SMALL = 24
+IMG_SIZE_MED = 72
+IMG_SIZE_LARGE = 192
+IMG_SIZE_VERY_LARGE = 320
 
 
 class RGB():
@@ -16,7 +20,7 @@ class RGB():
         if pixel is not None:
             # OpenCV decoded images have the channels stored in **B G R** order
             self.b, self.g, self.r = pixel
-        
+    
     def is_white(self):
         # allow for slightly off-white
         return self.r >= 245 and self.g >= 245 and self.b >= 245
@@ -51,7 +55,7 @@ def compare_img_color(img1: cv2.Mat,
     return get_color_diff(rgb1, rgb2)
 
 
-def compare_img_pixels(img1: cv2.Mat, img2: cv2.Mat, img_resize: int = IMG_SIZE) -> float:
+def compare_img_pixels(img1: cv2.Mat, img2: cv2.Mat, img_resize: int = IMG_SIZE_MED) -> float:
     """Compares two images for pixel equality.
     Result is a number between [min=0,max=unknown] where min -> same image and
     increasing value indicates more differences between the images."""
@@ -80,12 +84,12 @@ def get_n_pixels(img: cv2.Mat) -> int:
     return int(img.size/RGB.LENGTH)
 
 
-def get_image_height(img: cv2.Mat) -> int:
+def get_img_height(img: cv2.Mat) -> int:
     """Obtain the height of an image, in pixels."""
     return img.shape[0]
 
 
-def get_image_width(img: cv2.Mat) -> int:
+def get_img_width(img: cv2.Mat) -> int:
     """Obtain the width of an image, in pixels."""
     return img.shape[1]
 
